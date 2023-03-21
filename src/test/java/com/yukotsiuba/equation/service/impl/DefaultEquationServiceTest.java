@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 class DefaultEquationServiceTest {
     
@@ -45,12 +47,14 @@ class DefaultEquationServiceTest {
     
     private static List<Equation> prepareIncorrectEquations() {
         return Arrays.asList(
-             //  Equation.builder().equation("+ 3 = 5").build(),
-             //   Equation.builder().equation("y + 3 = 5").build(),
-             //   Equation.builder().equation("x + 3  5").build(),
-             //   Equation.builder().equation("x - + 3 = 5").build(),
-             //   Equation.builder().equation("x - - - 3 = 5").build(),
-             //   Equation.builder().equation("x + * 3 = 5").build(),
+                Equation.builder().equation("+ 3 = 5").build(),
+                Equation.builder().equation("x5").build(),
+                Equation.builder().equation("x+ 3 = 5 = 8").build(),
+                Equation.builder().equation("y + 3 = 5").build(),
+                Equation.builder().equation("x + 3  5").build(),
+                Equation.builder().equation("x - + 3 = 5").build(),
+                Equation.builder().equation("x - - - 3 = 5").build(),
+                Equation.builder().equation("x + * 3 = 5").build(),
                 Equation.builder().equation("x * / 3 = 5").build(),
                 Equation.builder().equation("x + (3 + 7 = 5").build(),
                 Equation.builder().equation("(x * -2) + 3) = 5").build());

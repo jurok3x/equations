@@ -7,6 +7,9 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 @Service
 @Slf4j
 public class DefaultEquationService implements IEquationService {
@@ -43,8 +46,11 @@ public class DefaultEquationService implements IEquationService {
     
     private boolean validateSigns(String equation) {
         log.debug("Checking signs");
-        String regex = ".*([-+*/][-+*/]+[-+*/]|[-+*/]([/-]|[*/][-+])|([-*/][+*-])).*";
-        return !equation.trim().matches(regex);
+        String trimmedEq = equation.replaceAll("\\s+", "");
+        String regex = "([+-/*][+/*])|([+-/*]-{2})|([^x+-/*=\\d\\(\\)])|(=.*?=)|(=$)|(^[^=]*$)|(^[^x]*$)";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(trimmedEq);
+        return !matcher.find();
     }
 
 }
