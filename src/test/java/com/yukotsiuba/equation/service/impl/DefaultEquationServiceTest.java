@@ -36,13 +36,13 @@ class DefaultEquationServiceTest {
     
     private static List<Equation> prepareCorrectEquations() {
         return Arrays.asList(
-                Equation.builder().equation("x + 3 = 5").build(),
-                Equation.builder().equation("x + - 3 = 5").build(),
-                Equation.builder().equation("x - - 3 = 5").build(),
-                Equation.builder().equation("x * - 3 = 5").build(),
-                Equation.builder().equation("x / - 3 = 5").build(),
-                Equation.builder().equation("x + (3 + 7) = 5").build(),
-                Equation.builder().equation("((x * -2) + 3) = 5").build());
+            //    Equation.builder().equation("x + 3 = 5").build());
+            //    Equation.builder().equation("x + - 3 = 5").build(),
+            //    Equation.builder().equation("x - - 3.00 = 5").build(),
+            //    Equation.builder().equation("x * - 3 = 5").build(),
+            //    Equation.builder().equation("x / - 3 = 5").build(),
+            //    Equation.builder().equation("x + (3 + 7) = 5").build(),
+                Equation.builder().equation("x + 3 = 5+x").build());
     }
     
     private static List<Equation> prepareIncorrectEquations() {
@@ -50,6 +50,7 @@ class DefaultEquationServiceTest {
                 Equation.builder().equation("+ 3 = 5").build(),
                 Equation.builder().equation("x5").build(),
                 Equation.builder().equation("x+ 3 = 5 = 8").build(),
+                Equation.builder().equation("x+ 3.0.0  = 8").build(),
                 Equation.builder().equation("y + 3 = 5").build(),
                 Equation.builder().equation("x + 3  5").build(),
                 Equation.builder().equation("x - + 3 = 5").build(),

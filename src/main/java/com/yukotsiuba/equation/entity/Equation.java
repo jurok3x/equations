@@ -8,8 +8,8 @@ import java.util.List;
 @Data
 @Builder
 public class Equation {
-    
+
+    private Integer id;
     private String equation;
-    private List<Double> roots;
 
 }

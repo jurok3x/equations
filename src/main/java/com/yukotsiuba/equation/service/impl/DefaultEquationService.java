@@ -14,9 +14,12 @@ import java.util.regex.Pattern;
 @Slf4j
 public class DefaultEquationService implements IEquationService {
 
+    static final Pattern DIGIT_OR_X = Pattern.compile("[\\dx]");
+    static final Pattern OPERATION = Pattern.compile("\\([\\dx][+*/-][\\dx]\\)");
+
     @Override
     public Equation save(Equation equation) {
-        if(validateSigns(equation.getEquation()) && validateParentheses(equation.getEquation())) {
+        if(validateEquation(equation.getEquation())) {
             return equation;
         }
         return null;
@@ -43,14 +46,40 @@ public class DefaultEquationService implements IEquationService {
             return false;
         }
     }
-    
-    private boolean validateSigns(String equation) {
-        log.debug("Checking signs");
-        String trimmedEq = equation.replaceAll("\\s+", "");
-        String regex = "([+-/*][+/*])|([+-/*]-{2})|([^x+-/*=\\d\\(\\)])|(=.*?=)|(=$)|(^[^=]*$)|(^[^x]*$)";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(trimmedEq);
-        return !matcher.find();
+
+    private boolean validateEquation(String equation) {
+        String trimmedEq = equation.replaceAll("\\s+", "").toLowerCase();
+        if(!containsOnlyOneEqual(trimmedEq)){
+            return false;
+        }
+        String[] formulas = trimmedEq.split("=");
+        for(String formula:formulas){
+            if(!isFormula(formula)){
+                return false;
+            }
+        }
+        return validateParentheses(trimmedEq);
     }
 
-}
+    private boolean  containsOnlyOneEqual(String str) {
+        int count = 0;
+        for (int i = 0; i < str.length(); i++) {
+            if (str.charAt(i) == '=') {
+                count++;
+            }
+        }
+        return count == 1;
+    }
+
+    private boolean isFormula(String s) {
+        while (true) {
+            if (DIGIT_OR_X.matcher(s).matches())
+                return true;
+            String rep = OPERATION.matcher(s).replaceAll("x");
+            if (rep.equals(s))
+                return false;
+            s = rep;
+        }
+
+    }
+    }
