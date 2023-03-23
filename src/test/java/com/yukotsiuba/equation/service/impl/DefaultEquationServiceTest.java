@@ -40,23 +40,23 @@ class DefaultEquationServiceTest {
             //    Equation.builder().equation("x * - 3 = 5").build(),
             //    Equation.builder().equation("x / - 3 = 5").build(),
             //    Equation.builder().equation("x + (3 + 7) = 5").build(),
-                Equation.builder().equation("x + 3 = 5+x").build());
+                Equation.builder().eqString("x + 3 = 5+x").build());
     }
     
     private static List<Equation> prepareIncorrectEquations() {
         return Arrays.asList(
-                Equation.builder().equation("+ 3 = 5").build(),
-                Equation.builder().equation("x5").build(),
-                Equation.builder().equation("x+ 3 = 5 = 8").build(),
-                Equation.builder().equation("x+ 3.0.0  = 8").build(),
-                Equation.builder().equation("y + 3 = 5").build(),
-                Equation.builder().equation("x + 3  5").build(),
-                Equation.builder().equation("x - + 3 = 5").build(),
-                Equation.builder().equation("x - - - 3 = 5").build(),
-                Equation.builder().equation("x + * 3 = 5").build(),
-                Equation.builder().equation("x * / 3 = 5").build(),
-                Equation.builder().equation("x + (3 + 7 = 5").build(),
-                Equation.builder().equation("(x * -2) + 3) = 5").build());
+                Equation.builder().eqString("+ 3 = 5").build(),
+                Equation.builder().eqString("x5").build(),
+                Equation.builder().eqString("x+ 3 = 5 = 8").build(),
+                Equation.builder().eqString("x+ 3.0.0  = 8").build(),
+                Equation.builder().eqString("y + 3 = 5").build(),
+                Equation.builder().eqString("x + 3  5").build(),
+                Equation.builder().eqString("x - + 3 = 5").build(),
+                Equation.builder().eqString("x - - - 3 = 5").build(),
+                Equation.builder().eqString("x + * 3 = 5").build(),
+                Equation.builder().eqString("x * / 3 = 5").build(),
+                Equation.builder().eqString("x + (3 + 7 = 5").build(),
+                Equation.builder().eqString("(x * -2) + 3) = 5").build());
     }
 
 }

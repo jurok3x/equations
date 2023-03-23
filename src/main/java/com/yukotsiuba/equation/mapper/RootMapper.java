@@ -8,14 +8,14 @@ public class RootMapper {
     public static RootDto toDto(Root root) {
         return RootDto.builder()
                 .id(root.getId())
-                .root(root.getRoot())
+                .value(root.getValue())
                 .build();
     }
 
     public static Root toEntity(RootDto rootDto) {
         return Root.builder()
                 .id(rootDto.getId())
-                .root(rootDto.getRoot())
+                .value(rootDto.getValue())
                 .build();
     }
 }

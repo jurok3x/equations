@@ -37,7 +37,7 @@ public class EquationDaoImpl implements IEquationDao {
 
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
-        params.addValue("equation", equation.getEquation());
+        params.addValue("equation", equation.getEqString());
 
         template.update(saveQuery, params, keyHolder, new String[] { "id" });
         Integer id = 0;

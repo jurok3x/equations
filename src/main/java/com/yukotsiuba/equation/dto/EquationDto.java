@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class EquationDto {
 
     private Integer id;
-    private String equation;
+    private String eqString;
 }

@@ -13,7 +13,7 @@ public class EquationRowMapper implements RowMapper<Equation> {
     public Equation mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Equation.builder()
                 .id(rs.getInt("id"))
-                .equation("equation")
+                .eqString("equation")
                 .build();
     }
 }

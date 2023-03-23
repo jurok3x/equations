@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 public class Equation {
 
     private Integer id;
-    private String equation;
+    private String eqString;
 
 }

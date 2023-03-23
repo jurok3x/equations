@@ -40,7 +40,7 @@ class EquationDaoImplTest {
     private static Equation prepareEquation() {
         return Equation.builder()
                 .id(1)
-                .equation("-8.7*4/x=4.3")
+                .eqString("-8.7*4/x=4.3")
                 .build();
     }
 
