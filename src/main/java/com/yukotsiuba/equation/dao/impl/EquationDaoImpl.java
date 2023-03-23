@@ -2,6 +2,7 @@ package com.yukotsiuba.equation.dao.impl;
 
 import com.yukotsiuba.equation.dao.IEquationDao;
 import com.yukotsiuba.equation.entity.Equation;
+import com.yukotsiuba.equation.entity.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,12 @@ import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.jdbc.core.namedparam.SqlParameterSource;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
+import java.util.List;
 import java.util.Optional;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 @PropertySource(value = "classpath:/db/equation/equation_queries.properties")
 @Slf4j
@@ -60,5 +62,20 @@ public class EquationDaoImpl implements IEquationDao {
             log.info(String.format("Equation with id - %d, not found.", id));
         }
         return Optional.ofNullable(equation);
+    }
+
+    @Override
+    public Optional<Equation> findByEquationString(String equation) {
+        return Optional.empty();
+    }
+
+    @Override
+    public List<Equation> findByRoots(List<Root> roots) {
+        return null;
+    }
+
+    @Override
+    public List<Equation> findByRootCount(Integer count) {
+        return null;
     }
 }
