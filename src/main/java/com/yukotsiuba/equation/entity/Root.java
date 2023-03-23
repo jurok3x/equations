@@ -1,4 +1,4 @@
-package com.yukotsiuba.equation.dto;
+package com.yukotsiuba.equation.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -9,8 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class EquationDto {
+public class Root {
 
     private Integer id;
-    private String equation;
+    private Double root;
 }
