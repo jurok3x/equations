@@ -1,5 +1,7 @@
 package com.yukotsiuba.equation.service;
 
+import com.yukotsiuba.equation.dto.EquationDto;
+import com.yukotsiuba.equation.dto.RootDto;
 import com.yukotsiuba.equation.entity.Equation;
 import com.yukotsiuba.equation.entity.Root;
 
@@ -7,6 +9,6 @@ import java.util.List;
 
 public interface IRootService {
 
-    Root add(Equation equation, Root root);
-    List<Root> addAll(Equation equation, List<Root> root);
+    RootDto add(EquationDto equationDto, RootDto rootDto);
+    List<RootDto> addAll(EquationDto equation, List<RootDto> rootDtos);
 }

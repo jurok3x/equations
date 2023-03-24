@@ -1,84 +1,65 @@
 package com.yukotsiuba.equation.service.impl;
 
+import com.yukotsiuba.equation.dto.EquationDto;
+import com.yukotsiuba.equation.dto.RootDto;
 import com.yukotsiuba.equation.entity.Equation;
+import com.yukotsiuba.equation.entity.Root;
+import com.yukotsiuba.equation.exception.IncorrectEquationException;
+import com.yukotsiuba.equation.mapper.EquationMapper;
+import com.yukotsiuba.equation.mapper.RootMapper;
+import com.yukotsiuba.equation.repository.IEquationRepository;
 import com.yukotsiuba.equation.service.IEquationService;
 
+import com.yukotsiuba.equation.utils.EquationUtils;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 @Service
+@AllArgsConstructor
 @Slf4j
 public class DefaultEquationService implements IEquationService {
 
-    static final Pattern DIGIT_OR_X = Pattern.compile("[\\dx]");
-    static final Pattern OPERATION = Pattern.compile("\\([\\dx][+*/-][\\dx]\\)");
+    private IEquationRepository equationRepository;
 
     @Override
-    public Equation save(Equation equation) {
-        if(validateEquation(equation.getEqString())) {
-            return equation;
+    public EquationDto save(EquationDto equationDto) {
+        if(!EquationUtils.validateEquation(equationDto.getEqString())) {
+            throw new IncorrectEquationException("Wrong equation.");
         }
-        return null;
-    }
-    
-    private boolean validateParentheses(String equation) {
-        log.debug("Checking parentheses");
-        int count = 0;
-        for(int i = 0; i < equation.length(); i++) {
-          if(equation.charAt(i) == '(') {
-              count++;
-          }
-            else if(equation.charAt(i) == ')') {
-                count--;
-            }
-          if(count < 0) {
-              return false;
-          }
-        }
-        if(count == 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        Equation newEquation = equationRepository.save(EquationMapper.toEntity(equationDto));
+        return EquationMapper.toDto(newEquation);
     }
 
-    private boolean validateEquation(String equation) {
-        String trimmedEq = equation.replaceAll("\\s+", "").toLowerCase();
-        if(!containsOnlyOneEqual(trimmedEq)){
-            return false;
+    @Override
+    public List<EquationDto> findByRoots(List<RootDto> rootDtos) {
+        if(rootDtos == null) {
+            throw new NullPointerException("Root list can not be null.");
         }
-        String[] formulas = trimmedEq.split("=");
-        for(String formula:formulas){
-            if(!isFormula(formula)){
-                return false;
-            }
-        }
-        return validateParentheses(trimmedEq);
+        List<Root> roots = rootDtos.stream()
+                .map(RootMapper::toEntity)
+                .collect(Collectors.toList());
+        List<Equation> equations = equationRepository.findByRoots(roots);
+        List<EquationDto> equationDtos = mapEquationList(equations);
+        return equationDtos;
     }
 
-    private boolean  containsOnlyOneEqual(String str) {
-        int count = 0;
-        for (int i = 0; i < str.length(); i++) {
-            if (str.charAt(i) == '=') {
-                count++;
-            }
-        }
-        return count == 1;
+    @Override
+    public List<EquationDto> findByRootsCount(Integer count) {
+        List<Equation> equations = equationRepository.findByRootsCount(count);
+        List<EquationDto> equationDtos = mapEquationList(equations);
+        return equationDtos;
     }
 
-    private boolean isFormula(String s) {
-        while (true) {
-            if (DIGIT_OR_X.matcher(s).matches())
-                return true;
-            String rep = OPERATION.matcher(s).replaceAll("x");
-            if (rep.equals(s))
-                return false;
-            s = rep;
-        }
+    private List<EquationDto> mapEquationList(List<Equation> equations) {
+        return equations.stream()
+                .map(EquationMapper::toDto)
+                .collect(Collectors.toList());
+    }
 
-    }
-    }
+}
