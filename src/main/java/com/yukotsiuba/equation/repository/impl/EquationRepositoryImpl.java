@@ -33,7 +33,7 @@ public class EquationRepositoryImpl implements IEquationRepository {
     @Override
     public List<Equation> findByRootsCount(Integer count) {
         if(!validateCount(count)){
-            throw new BadParameterException("Wrong count quantity.")
+            throw new BadParameterException("Wrong count quantity.");
         }
         return equationDao.findByRootCount();
     }
