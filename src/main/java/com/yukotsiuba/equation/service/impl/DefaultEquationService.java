@@ -7,7 +7,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import org.springframework.stereotype.Service;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 @Service
@@ -19,7 +18,7 @@ public class DefaultEquationService implements IEquationService {
 
     @Override
     public Equation save(Equation equation) {
-        if(validateEquation(equation.getEquation())) {
+        if(validateEquation(equation.getEqString())) {
             return equation;
         }
         return null;

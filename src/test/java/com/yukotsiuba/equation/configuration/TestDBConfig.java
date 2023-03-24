@@ -20,6 +20,10 @@ public class TestDBConfig {
                 .setType(EmbeddedDatabaseType.H2)
                 .addScript("classpath:/db/equation/schema.sql")
                 .addScript("classpath:/db/equation/test-data.sql")
+                .addScript("classpath:/db/root/schema.sql")
+                .addScript("classpath:/db/root/test-data.sql")
+                .addScript("classpath:/db/equations_roots/schema.sql")
+                .addScript("classpath:/db/equations_roots/test-data.sql")
                 .build();
 
         return dataSource;

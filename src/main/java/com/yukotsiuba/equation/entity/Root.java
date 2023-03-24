@@ -9,9 +9,8 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Equation {
+public class Root {
 
     private Integer id;
-    private String eqString;
-
+    private Double value;
 }
