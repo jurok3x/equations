@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
+import org.springframework.data.relational.core.sql.In;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -19,6 +20,7 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -32,6 +34,10 @@ public class EquationDaoImpl implements IEquationDao {
     private String saveQuery;
     @Value("${find.by_id}")
     private String findByIdQuery;
+    @Value("${find.by_eq_string}")
+    private String findByEqStringQuery;
+    @Value("${find.by_roots}")
+    private String findByRootsQuery;
 
     @Override
     public Equation save(Equation equation) {
@@ -57,21 +63,30 @@ public class EquationDaoImpl implements IEquationDao {
         SqlParameterSource param = new MapSqlParameterSource("id", id);
         Equation equation = null;
         try {
-            equation = template.queryForObject(findByIdQuery, param, BeanPropertyRowMapper.newInstance(Equation.class));
+            equation = template.queryForObject(findByIdQuery, param, rowMapper);
         } catch (DataAccessException ex) {
-            log.info(String.format("Equation with id - %d, not found.", id));
+            log.error(String.format("Equation with id - %d, not found.", id));
         }
         return Optional.ofNullable(equation);
     }
 
     @Override
-    public Optional<Equation> findByEquationString(String equation) {
-        return Optional.empty();
+    public Optional<Equation> findByEquationString(String eqString) {
+        SqlParameterSource param = new MapSqlParameterSource("eqString", eqString);
+        Equation equation = null;
+        try {
+            equation = template.queryForObject(findByIdQuery, param, rowMapper);
+        } catch (DataAccessException ex) {
+            log.error(String.format("Equation %s, not found.", eqString));
+        }
+        return Optional.ofNullable(equation);
     }
 
     @Override
     public List<Equation> findByRoots(List<Root> roots) {
-        return null;
+        List<Integer> rootsId = roots.stream().mapToInt(Root::getId).collect(Collectors.toList());
+        SqlParameterSource param = new MapSqlParameterSource("roots", rootsId);
+        return template.query(findByRootsQuery, param, rowMapper);
     }
 
     @Override

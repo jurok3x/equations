@@ -10,7 +10,7 @@ public interface IEquationDao {
 
     Equation save(Equation equation);
     Optional<Equation> findById(Integer id);
-    Optional<Equation> findByEquationString(String equation);
+    Optional<Equation> findByEquationString(String eqString);
     List<Equation> findByRoots(List<Root> roots);
     List<Equation> findByRootCount(Integer count);
 }
