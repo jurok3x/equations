@@ -35,7 +35,7 @@ public class EquationRepositoryImpl implements IEquationRepository {
         if(!validateCount(count)){
             throw new BadParameterException("Wrong count quantity.");
         }
-        return equationDao.findByRootCount();
+        return equationDao.findByRootCount(count);
     }
 
     private boolean equationExists(Equation equation) {
