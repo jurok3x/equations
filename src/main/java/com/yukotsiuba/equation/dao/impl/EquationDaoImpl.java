@@ -38,6 +38,8 @@ public class EquationDaoImpl implements IEquationDao {
     private String findByEqStringQuery;
     @Value("${find.by_roots}")
     private String findByRootsQuery;
+    @Value("${find.by_roots_count}")
+    private String findByRootsCountQuery;
 
     @Override
     public Equation save(Equation equation) {
@@ -84,13 +86,14 @@ public class EquationDaoImpl implements IEquationDao {
 
     @Override
     public List<Equation> findByRoots(List<Root> roots) {
-        List<Integer> rootsId = roots.stream().mapToInt(Root::getId).collect(Collectors.toList());
+        List<Integer> rootsId = roots.stream().map(Root::getId).collect(Collectors.toList());
         SqlParameterSource param = new MapSqlParameterSource("roots", rootsId);
         return template.query(findByRootsQuery, param, rowMapper);
     }
 
     @Override
     public List<Equation> findByRootCount(Integer count) {
-        return null;
+        SqlParameterSource param = new MapSqlParameterSource("count", count);
+        return template.query(findByRootsQuery, param, rowMapper);
     }
 }
