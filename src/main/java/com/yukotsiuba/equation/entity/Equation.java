@@ -5,6 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -13,5 +15,6 @@ public class Equation {
 
     private Integer id;
     private String eqString;
+    private List<Root> roots;
 
 }
