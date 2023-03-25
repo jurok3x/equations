@@ -2,14 +2,11 @@ package com.yukotsiuba.equation.dao.impl;
 
 import com.yukotsiuba.equation.dao.IEquationDao;
 import com.yukotsiuba.equation.entity.Equation;
-import com.yukotsiuba.equation.entity.Root;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.data.relational.core.sql.In;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -20,7 +17,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -77,7 +73,7 @@ public class EquationDaoImpl implements IEquationDao {
         SqlParameterSource param = new MapSqlParameterSource("eqString", eqString);
         Equation equation = null;
         try {
-            equation = template.queryForObject(findByIdQuery, param, rowMapper);
+            equation = template.queryForObject(findByEqStringQuery, param, rowMapper);
         } catch (DataAccessException ex) {
             log.error(String.format("Equation %s, not found.", eqString));
         }
@@ -85,15 +81,14 @@ public class EquationDaoImpl implements IEquationDao {
     }
 
     @Override
-    public List<Equation> findByRoots(List<Root> roots) {
-        List<Integer> rootsId = roots.stream().map(Root::getId).collect(Collectors.toList());
-        SqlParameterSource param = new MapSqlParameterSource("roots", rootsId);
+    public List<Equation> findByRootValues(List<Double> roots) {
+        SqlParameterSource param = new MapSqlParameterSource("roots", roots);
         return template.query(findByRootsQuery, param, rowMapper);
     }
 
     @Override
     public List<Equation> findByRootCount(Integer count) {
         SqlParameterSource param = new MapSqlParameterSource("count", count);
-        return template.query(findByRootsQuery, param, rowMapper);
+        return template.query(findByRootsCountQuery, param, rowMapper);
     }
 }

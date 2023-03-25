@@ -1,5 +1,11 @@
 package com.yukotsiuba.equation.utils;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
+
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class EquationUtils {
@@ -64,7 +70,40 @@ public class EquationUtils {
     }
 
     public static boolean validateRoot(String expression, Double value) {
-        return false;
+        String[] expressionParts = expression.split("=");
+        int precission = getPrecision(value);
+        List<Double> results = new ArrayList<>();
+        for(String expressionPart:expressionParts) {
+            if(expressionPart.contains("x")) {
+                String expressionFormat = getExpressionFormat(expressionPart, precission);
+                expressionPart = String.format(expressionFormat, value);
+            }
+            results.add(evaluate(expressionPart)); 
+        }
+        return results.get(0) == results.get(1);
+    }
+    
+    private static String getExpressionFormat(String expression, int precission) {
+        String floatFormat = String.format("%%.%df", precission);      
+        return expression.replaceAll("x", floatFormat);
+    }
+    
+    private static int getPrecision(Double value) {
+        String doubleString = value.toString();
+        int decimalIndex = doubleString.indexOf(".");
+        return doubleString.length() - decimalIndex - 1;
+    }
+    
+    private static Double evaluate(String expression) {
+        ScriptEngineManager mgr = new ScriptEngineManager();
+        ScriptEngine engine = mgr.getEngineByName("JavaScript");
+        Double result = null;
+        try {
+            result = (double) engine.eval(expression);
+        } catch (ScriptException e) {
+            e.printStackTrace();
+        }
+        return result;
     }
 
 }

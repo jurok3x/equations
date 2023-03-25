@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.dao.DataAccessException;
-import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -30,10 +29,13 @@ public class RootDaoImpl implements IRootDao {
     private final RowMapper<Root> rowMapper;
     @Value("${save}")
     private String saveQuery;
-    @Value("${find.by_value}")
+    @Value("${find.by_id}")
     private String findByIdQuery;
+    @Value("${find.by_value}")
+    private String findByValueQuery;
     @Value("${find.by_equation}")
     private String findByEquationQuery;
+    
     @Override
     public Root save(Root root) {
         MapSqlParameterSource params = new MapSqlParameterSource();
@@ -54,11 +56,23 @@ public class RootDaoImpl implements IRootDao {
     }
 
     @Override
+    public Optional<Root> findById(Integer id) {
+        SqlParameterSource param = new MapSqlParameterSource("id", id);
+        Root root = null;
+        try {
+            root = template.queryForObject(findByIdQuery, param, rowMapper);
+        } catch (DataAccessException ex) {
+            log.error(String.format("Equation with id - %d, not found.", id));
+        }
+        return Optional.ofNullable(root);
+    }
+    
+    @Override
     public Optional<Root> findByValue(Double value) {
         SqlParameterSource param = new MapSqlParameterSource("value", value);
         Root root = null;
         try {
-            root = template.queryForObject(findByIdQuery, param, BeanPropertyRowMapper.newInstance(Root.class));
+            root = template.queryForObject(findByValueQuery, param, rowMapper);
         } catch (DataAccessException ex) {
             log.error(String.format("Equation with value - %.2f, not found.", value));
         }

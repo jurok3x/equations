@@ -1,14 +1,14 @@
 package com.yukotsiuba.equation.service;
 
 import com.yukotsiuba.equation.dto.EquationDto;
-import com.yukotsiuba.equation.dto.RootDto;
 
 import java.util.List;
 
 public interface IEquationService {
     
     EquationDto save(EquationDto equationDto);
-    List<EquationDto> findByRoots(List<RootDto> rootDtos);
+    List<EquationDto> findByRootValues(List<Double> values);
     List<EquationDto> findByRootsCount(Integer count);
+    EquationDto addRoots(Integer equationId, List<Double> values);
 
 }

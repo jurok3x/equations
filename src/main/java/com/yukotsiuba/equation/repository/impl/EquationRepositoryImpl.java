@@ -1,33 +1,52 @@
 package com.yukotsiuba.equation.repository.impl;
 
 import com.yukotsiuba.equation.dao.IEquationDao;
+import com.yukotsiuba.equation.dao.IEquationRootDao;
+import com.yukotsiuba.equation.dao.IRootDao;
 import com.yukotsiuba.equation.entity.Equation;
 import com.yukotsiuba.equation.entity.Root;
 import com.yukotsiuba.equation.exception.BadParameterException;
-import com.yukotsiuba.equation.exception.EquationAlreadyExistsException;
 import com.yukotsiuba.equation.repository.IEquationRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
 public class EquationRepositoryImpl implements IEquationRepository {
 
     private IEquationDao equationDao;
+    private IRootDao rootDao;
+    private IEquationRootDao equationRootDao;
+    
     @Override
     public Equation save(Equation equation) {
-        if(!equationExists(equation)){
-            throw new EquationAlreadyExistsException(String.format("Equation %s already exists.", equation.getEqString()));
+        if(equationExists(equation)){//add roots if equation exists
+            equation.getRoots().forEach(root -> addRoot(equation, root));
+            return equation;
         }
-        Equation neqEquation = equationDao.save(equation);
-        return neqEquation;
+        Equation newEquation = equationDao.save(equation);//save new equation
+        return newEquation;
+    }
+    
+    private void addRoot(Equation equation, Root root) {
+        if(equationExists(equation)){
+            if(!rootExists(root)) {
+                rootDao.save(root); 
+            }
+            equationRootDao.save(equation, root);
+        }
+    }
+    
+    private boolean rootExists(Root root) {
+        return rootDao.findByValue(root.getValue()).isPresent();
     }
 
     @Override
-    public List<Equation> findByRoots(List<Root> roots) {
-        return equationDao.findByRoots(roots);
+    public List<Equation> findByRootValues(List<Double> values) {
+        return equationDao.findByRootValues(values);
     }
 
     @Override
@@ -39,7 +58,7 @@ public class EquationRepositoryImpl implements IEquationRepository {
     }
 
     private boolean equationExists(Equation equation) {
-        return equationDao.findById(equation.getId()).isPresent();
+        return equationDao.findByEquationString(equation.getEqString()).isPresent();
     }
 
     private boolean validateCount(Integer count) {
@@ -48,4 +67,17 @@ public class EquationRepositoryImpl implements IEquationRepository {
         }
         return count >= 0;
     }
+
+    @Override
+    public Optional<Equation> findById(Integer id) {
+        Optional<Equation> optionalEq = equationDao.findById(id);
+        Equation equation = null;
+        if(optionalEq.isPresent()) {
+            equation = optionalEq.get();
+            List<Root> roots = rootDao.findByEquation(equation);
+            equation.setRoots(roots);
+        }
+        return Optional.ofNullable(equation);
+    }
+
 }

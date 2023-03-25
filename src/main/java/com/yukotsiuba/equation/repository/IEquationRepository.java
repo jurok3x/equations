@@ -1,13 +1,15 @@
 package com.yukotsiuba.equation.repository;
 
 import com.yukotsiuba.equation.entity.Equation;
-import com.yukotsiuba.equation.entity.Root;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface IEquationRepository {
 
     Equation save(Equation equation);
-    List<Equation> findByRoots(List<Root> roots);
+    Optional<Equation> findById(Integer id);
+    List<Equation> findByRootValues(List<Double> values);
     List<Equation> findByRootsCount(Integer count);
+
 }

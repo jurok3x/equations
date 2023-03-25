@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Component;
@@ -25,8 +24,8 @@ public class EquationRootDaoImpl implements IEquationRootDao {
     @Override
     public void save(Equation equation, Root root) {
         MapSqlParameterSource params = new MapSqlParameterSource();
-        params.addValue("equation_id", equation.getId());
-        params.addValue("root_id", root.getId());
+        params.addValue("equationId", equation.getId());
+        params.addValue("rootId", root.getId());
         template.update(saveQuery, params);
         log.info("Inserting equation id {} and root id {}", equation.getId(), root.getId());
     }

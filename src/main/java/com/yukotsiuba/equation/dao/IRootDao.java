@@ -9,6 +9,7 @@ import java.util.Optional;
 public interface IRootDao {
 
     Root save(Root root);
+    Optional<Root> findById(Integer id);
     Optional<Root> findByValue(Double value);
     List<Root> findByEquation(Equation equation) ;
 }

@@ -1,7 +1,6 @@
 package com.yukotsiuba.equation.controller;
 
 import com.yukotsiuba.equation.dto.EquationDto;
-import com.yukotsiuba.equation.dto.RootDto;
 import com.yukotsiuba.equation.service.IEquationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,10 +22,10 @@ public class EquationController {
         return new ResponseEntity<>(equationService.save(equationDto), HttpStatus.CREATED);
     }
     
-    @GetMapping("/roots")
-    public ResponseEntity<List<EquationDto>> findByRoots(@PathVariable Double[] roots) {
+    @GetMapping
+    public ResponseEntity<List<EquationDto>> findByRoots(@RequestParam Double[] roots) {
         List<Double> rootList = Arrays.asList(roots);
-        return new ResponseEntity<>(equationService.findByRoots(rootList), HttpStatus.OK);
+        return new ResponseEntity<>(equationService.findByRootValues(rootList), HttpStatus.OK);
     }
 
     @GetMapping("/roots/count/{count}")
@@ -35,8 +34,7 @@ public class EquationController {
     }
     
     @PutMapping("/{eqId}/add/roots")
-    public ResponseEntity<EquationDto> addRoots(@PathVariable Integer eqId, @RequestBody List<RootDto> roots) {
-
-        return null;
+    public ResponseEntity<EquationDto> addRoots(@PathVariable Integer eqId, @RequestBody List<Double> values) {
+        return new ResponseEntity<>(equationService.addRoots(eqId, values), HttpStatus.ACCEPTED);
     }
 }

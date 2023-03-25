@@ -11,7 +11,7 @@ public class RootRowMapper implements RowMapper<Root> {
     public Root mapRow(ResultSet rs, int rowNum) throws SQLException {
         return Root.builder()
                 .id(rs.getInt("id"))
-                .value(rs.getDouble("value"))
+                .value(rs.getDouble("root_value"))
                 .build();
     }
 }
