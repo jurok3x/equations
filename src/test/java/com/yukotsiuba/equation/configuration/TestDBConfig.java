@@ -1,6 +1,7 @@
 package com.yukotsiuba.equation.configuration;
 
 import com.yukotsiuba.equation.dao.extractor.EquationRowMapper;
+import com.yukotsiuba.equation.dao.extractor.RootRowMapper;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -12,7 +13,7 @@ import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 import javax.sql.DataSource;
 
 @Configuration
-@Import(EquationRowMapper.class)
+@Import({EquationRowMapper.class, RootRowMapper.class})
 public class TestDBConfig {
     
     public DataSource postgresDataSource() {
