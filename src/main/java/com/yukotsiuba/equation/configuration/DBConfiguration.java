@@ -10,9 +10,9 @@ import javax.sql.DataSource;
 @Configuration
 public class DBConfiguration {
 
-    @Value("${db.link}")
+    @Value("${db.password}")
     private String password;
-    @Value("${db.link}")
+    @Value("${db.user}")
     private String username;
     @Value("${db.link}")
     private String link;

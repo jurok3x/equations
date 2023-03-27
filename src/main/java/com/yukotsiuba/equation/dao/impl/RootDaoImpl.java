@@ -27,13 +27,13 @@ public class RootDaoImpl implements IRootDao {
 
     private final NamedParameterJdbcTemplate template;
     private final RowMapper<Root> rowMapper;
-    @Value("${save}")
+    @Value("${save_root}")
     private String saveQuery;
-    @Value("${find.by_id}")
+    @Value("${find_root.by_id}")
     private String findByIdQuery;
-    @Value("${find.by_value}")
+    @Value("${find_root.by_value}")
     private String findByValueQuery;
-    @Value("${find.by_equation}")
+    @Value("${find_root.by_equation}")
     private String findByEquationQuery;
     
     @Override

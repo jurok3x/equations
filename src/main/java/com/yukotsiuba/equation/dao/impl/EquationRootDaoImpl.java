@@ -18,7 +18,7 @@ import org.springframework.stereotype.Component;
 public class EquationRootDaoImpl implements IEquationRootDao {
 
     private final NamedParameterJdbcTemplate template;
-    @Value("${save}")
+    @Value("${save_equation_root}")
     private String saveQuery;
 
     @Override
