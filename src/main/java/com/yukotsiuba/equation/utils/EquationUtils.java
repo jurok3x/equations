@@ -1,30 +1,30 @@
 package com.yukotsiuba.equation.utils;
 
-import javax.script.ScriptEngine;
-import javax.script.ScriptEngineManager;
-import javax.script.ScriptException;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.text.DecimalFormat;
 import java.util.regex.Pattern;
 
 public class EquationUtils {
-    static final Pattern DIGIT_OR_X = Pattern.compile("[\\dx]");
-    static final Pattern OPERATION = Pattern.compile("\\([\\dx][+*/-][\\dx]\\)");
+    private static Pattern simpleLang = Pattern.compile("^\\(*-?\\(*(\\d+([.]\\d+)?|x)([-+*/]\\(*-?\\(*(\\d+([.]\\d+)?|x)\\)*)*$");
 
 
     public static boolean validateEquation(String equation) {
-        String trimmedEq = equation.replaceAll("\\s+", "").toLowerCase();
-        if(!containsOnlyOneEqual(trimmedEq)){
+        if(!equation.contains("x")){
+            return false;
+        } 
+        if(!containsOnlyOneEqual(equation)){
             return false;
         }
-        String[] formulas = trimmedEq.split("=");
-        for(String formula:formulas){
-            if(!isFormula(formula)){
+        if(!validateParentheses(equation)){
+            return false;
+        }
+        String trimmedEq = equation.replaceAll("\\s", "");
+        String[] expressions = trimmedEq.split("=");
+        for(String expression:expressions){
+            if(!simpleLang.matcher(expression).matches()){
                 return false;
             }
         }
-        return validateParentheses(trimmedEq);
+        return true;
     }
 
     private static boolean validateParentheses(String equation) {
@@ -58,52 +58,116 @@ public class EquationUtils {
         return count == 1;
     }
 
-    private static boolean isFormula(String s) {
-        while (true) {
-            if (DIGIT_OR_X.matcher(s).matches())
-                return true;
-            String rep = OPERATION.matcher(s).replaceAll("x");
-            if (rep.equals(s))
-                return false;
-            s = rep;
-        }
-    }
-
     public static boolean validateRoot(String expression, Double value) {
+        expression = expression.replaceAll("x", value.toString());
         String[] expressionParts = expression.split("=");
-        int precission = getPrecision(value);
-        List<Double> results = new ArrayList<>();
-        for(String expressionPart:expressionParts) {
-            if(expressionPart.contains("x")) {
-                String expressionFormat = getExpressionFormat(expressionPart, precission);
-                expressionPart = String.format(expressionFormat, value);
-            }
-            results.add(evaluate(expressionPart)); 
+        DecimalFormat df = getResultFormat(getPrecision(value)); 
+        String leftPart = getResult(expressionParts[0], df);
+        String rightPart = getResult(expressionParts[1], df);
+        return leftPart.equals(rightPart);
+    }
+    
+    private static DecimalFormat getResultFormat(int precission) {
+        StringBuilder format = new StringBuilder("#.");
+        for(int i=0;i<precission;i++) {
+            format.append("#");
         }
-        return results.get(0) == results.get(1);
+        return new DecimalFormat(format.toString());
     }
     
-    private static String getExpressionFormat(String expression, int precission) {
-        String floatFormat = String.format("%%.%df", precission);      
-        return expression.replaceAll("x", floatFormat);
-    }
-    
-    private static int getPrecision(Double value) {
+    private static int getPrecision(Double value) { // to obtain number of digits after dot
         String doubleString = value.toString();
         int decimalIndex = doubleString.indexOf(".");
         return doubleString.length() - decimalIndex - 1;
     }
     
-    private static Double evaluate(String expression) {
-        ScriptEngineManager mgr = new ScriptEngineManager();
-        ScriptEngine engine = mgr.getEngineByName("JavaScript");
-        Double result = null;
-        try {
-            result = (double) engine.eval(expression);
-        } catch (ScriptException e) {
-            e.printStackTrace();
-        }
-        return result;
+    private static String getResult(String expression, DecimalFormat df) {
+        double value = eval(expression);
+        return df.format(value);
+    }
+    
+    private static double eval(final String str) {
+        return new Object() {
+            int pos = -1;
+            int ch;
+            
+            void nextChar() {
+                ch = (++pos < str.length()) ? str.charAt(pos) : -1;
+            }
+            
+            boolean eat(int charToEat) {
+                while (ch == ' ') {
+                    nextChar();
+                }
+                if (ch == charToEat) {// if current character contains the sign then return true and looking forward
+                    nextChar();
+                    return true;
+                }
+                return false;
+            }
+            
+            double parse() {
+                nextChar();
+                double x = parseExpression();
+                if (pos < str.length()) {
+                    throw new RuntimeException("Unexpected: " + (char)ch); // if we parsed but expression still remains throw exception
+                }
+                return x;
+            }
+            
+            double parseExpression() {
+                double x = parseTerm();
+                for (;;) { // addition or subtraction but first find multiplication or division
+                    if(eat('+')) {
+                        x += parseTerm(); 
+                    }
+                    else if(eat('-')) {
+                        x -= parseTerm();
+                    }
+                    else return x;
+                }
+            }
+            
+            double parseTerm() {
+                double x = parseFactor();//finds multiplication or division terms
+                for (;;) {
+                    if(eat('*')) { //now looking for signs
+                        x *= parseFactor(); // multiplication
+                    }
+                    else if (eat('/')) {
+                        x /= parseFactor(); // division
+                    }
+                    else return x;
+                }
+            }
+            
+            double parseFactor() {
+                if (eat('-')) {
+                    return -parseFactor(); // if negative sign
+                }
+                double x;
+                int startPos = this.pos;
+                if (eat('(')) { // parentheses
+                    x = parseExpression();
+                    if (!eat(')')) {
+                        throw new RuntimeException("Missing ')'");
+                    }
+                } else if (isDigitChar(ch)) { // numbers
+                    while (isDigitChar(ch)) {
+                        nextChar();
+                    }
+                    x = Double.parseDouble(str.substring(startPos, this.pos));
+                }  else {
+                    throw new RuntimeException("Unexpected: " + (char)ch);
+                }
+                return x;
+            }
+            
+            boolean isDigitChar(int c) {
+                return (c >= '0' && c <= '9') || c == '.';
+            }
+            
+        }.parse();
     }
 
 }

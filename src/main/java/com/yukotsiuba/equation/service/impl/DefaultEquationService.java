@@ -3,6 +3,7 @@ package com.yukotsiuba.equation.service.impl;
 import com.yukotsiuba.equation.dto.EquationDto;
 import com.yukotsiuba.equation.entity.Equation;
 import com.yukotsiuba.equation.entity.Root;
+import com.yukotsiuba.equation.exception.BadRootException;
 import com.yukotsiuba.equation.exception.IncorrectEquationException;
 import com.yukotsiuba.equation.exception.ResourceNotFoundException;
 import com.yukotsiuba.equation.mapper.EquationMapper;
@@ -15,7 +16,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -59,11 +59,13 @@ public class DefaultEquationService implements IEquationService {
     @Override
     public EquationDto addRoots(Integer equationId, List<Double> values) {
         List<Root> roots = values.stream().map(value -> mapToRoot(value)).toList();
-        Optional<Equation> optionalEq = equationRepository.findById(equationId);
-        if(optionalEq.isEmpty()) {
-            throw new ResourceNotFoundException("Can not find the equation");
+        Equation equation = equationRepository.findById(equationId)
+                .orElseThrow(() -> new ResourceNotFoundException("Can not find the equation"));
+        for(Root root:roots) {
+            if(!EquationUtils.validateRoot(equation.getEqString(), root.getValue())) {
+                throw new BadRootException(String.format("Value %.2f is not root of the expression %s.", root.getValue(), equation.getEqString()));
+            }
         }
-        Equation equation = optionalEq.get();
         equation.getRoots().addAll(roots);
         return EquationMapper.toDto(equationRepository.save(equation));
     }

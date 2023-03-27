@@ -46,7 +46,11 @@ public class EquationRepositoryImpl implements IEquationRepository {
 
     @Override
     public List<Equation> findByRootValues(List<Double> values) {
-        return equationDao.findByRootValues(values);
+        List<Equation> equations = equationDao.findByRootValues(values);
+        for(Equation equation:equations) {
+            equation.setRoots(rootDao.findByEquation(equation));
+        }
+        return equations;
     }
 
     @Override
@@ -54,7 +58,11 @@ public class EquationRepositoryImpl implements IEquationRepository {
         if(!validateCount(count)){
             throw new BadParameterException("Wrong count quantity.");
         }
-        return equationDao.findByRootCount(count);
+        List<Equation> equations = equationDao.findByRootCount(count);
+        for(Equation equation:equations) {
+            equation.setRoots(rootDao.findByEquation(equation));
+        }
+        return equations;
     }
 
     private boolean equationExists(Equation equation) {
