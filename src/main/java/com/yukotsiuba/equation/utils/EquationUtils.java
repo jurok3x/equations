@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class EquationUtils {
     private static Pattern simpleLang = Pattern.compile("^\\(*-?\\(*(\\d+([.]\\d+)?|x)([-+*/]\\(*-?\\(*(\\d+([.]\\d+)?|x)\\)*)*$");
+    private static Pattern valuePattern = Pattern.compile("^-?\\d+([.]\\d+|/\\d+)?$");
 
 
     public static boolean validateEquation(String equation) {
@@ -59,6 +60,9 @@ public class EquationUtils {
     }
 
     public static boolean validateRoot(String expression, String value) {
+        if(!valuePattern.matcher(value).matches()){
+            return false;
+        }
         expression = expression.replaceAll("x", value.toString());
         String[] expressionParts = expression.split("=");
         DecimalFormat df = getResultFormat(getPrecision(value)); 

@@ -14,6 +14,7 @@ class EquationUtilsTest {
         assertTrue(EquationUtils.validateRoot("2*x+6=174", "84.0"));
         assertTrue(EquationUtils.validateRoot("2*x+(6+2)=174", "83.0"));
         assertTrue(EquationUtils.validateRoot("x-1=1/3", "1.33"));
+        assertTrue(EquationUtils.validateRoot("x*3=1", "1/3"));
     }
     
     @Test

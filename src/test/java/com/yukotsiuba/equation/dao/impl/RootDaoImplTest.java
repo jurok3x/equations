@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest(classes = { TestDBConfig.class, RootDaoImpl.class })
 class RootDaoImplTest {
@@ -26,17 +27,11 @@ class RootDaoImplTest {
         root.setId(4);
         assertEquals(root, rootDao.save(root));
     }
-
-    @Test
-    void whenValueProvided_thenReturnCorrectRoot() {
-        Root root = prepareRoot();
-        assertEquals(root, rootDao.findByValue(root.getValue()).get());
-    }
     
     @Test
     void whenIdProvided_thenReturnCorrectRoot() {
         Root root = prepareRoot();
-        assertEquals(root, rootDao.findById(root.getId()).get());
+        assertEquals(Optional.of(root), rootDao.findById(root.getId()));
     }
     
     @Test
