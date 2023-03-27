@@ -22,7 +22,7 @@ class RootDaoImplTest {
     
     @Test
     void whenSave_thenReturnCorrectRoot() {
-        Root root = Root.builder().value(12.0).build();
+        Root root = Root.builder().value("12.0").build();
         root.setId(4);
         assertEquals(root, rootDao.save(root));
     }
@@ -47,14 +47,14 @@ class RootDaoImplTest {
     private Root prepareRoot() {
         return Root.builder()
                 .id(1)
-                .value(84.0)
+                .value("84.0")
                 .build();
     }
     
     private List<Root> prepareRootList() {
         return Arrays.asList(
-                Root.builder().id(2).value(-2.0).build(),
-                Root.builder().id(3).value(2.0).build());
+                Root.builder().id(2).value("-2.0").build(),
+                Root.builder().id(3).value("2.0").build());
     }
     
     private static Equation prepareEquation() {

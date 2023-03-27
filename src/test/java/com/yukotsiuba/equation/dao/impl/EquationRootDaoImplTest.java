@@ -30,7 +30,7 @@ class EquationRootDaoImplTest {
     private Root prepareRoot() {
         return Root.builder()
                 .id(4)
-                .value(6.0)
+                .value("6.0")
                 .build();
     }
 

@@ -23,8 +23,8 @@ public class EquationController {
     }
     
     @GetMapping
-    public ResponseEntity<List<EquationDto>> findByRoots(@RequestParam Double[] roots) {
-        List<Double> rootList = Arrays.asList(roots);
+    public ResponseEntity<List<EquationDto>> findByRoots(@RequestParam String[] roots) {
+        List<String> rootList = Arrays.asList(roots);
         return new ResponseEntity<>(equationService.findByRootValues(rootList), HttpStatus.OK);
     }
 
@@ -34,7 +34,7 @@ public class EquationController {
     }
     
     @PutMapping("/{eqId}/add/roots")
-    public ResponseEntity<EquationDto> addRoots(@PathVariable Integer eqId, @RequestBody List<Double> values) {
+    public ResponseEntity<EquationDto> addRoots(@PathVariable Integer eqId, @RequestBody List<String> values) {
         return new ResponseEntity<>(equationService.addRoots(eqId, values), HttpStatus.ACCEPTED);
     }
 }

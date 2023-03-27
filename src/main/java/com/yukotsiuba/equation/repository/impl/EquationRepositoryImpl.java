@@ -45,7 +45,7 @@ public class EquationRepositoryImpl implements IEquationRepository {
     }
 
     @Override
-    public List<Equation> findByRootValues(List<Double> values) {
+    public List<Equation> findByRootValues(List<String> values) {
         List<Equation> equations = equationDao.findByRootValues(values);
         for(Equation equation:equations) {
             equation.setRoots(rootDao.findByEquation(equation));

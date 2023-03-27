@@ -58,7 +58,7 @@ public class EquationUtils {
         return count == 1;
     }
 
-    public static boolean validateRoot(String expression, Double value) {
+    public static boolean validateRoot(String expression, String value) {
         expression = expression.replaceAll("x", value.toString());
         String[] expressionParts = expression.split("=");
         DecimalFormat df = getResultFormat(getPrecision(value)); 
@@ -75,10 +75,9 @@ public class EquationUtils {
         return new DecimalFormat(format.toString());
     }
     
-    private static int getPrecision(Double value) { // to obtain number of digits after dot
-        String doubleString = value.toString();
-        int decimalIndex = doubleString.indexOf(".");
-        return doubleString.length() - decimalIndex - 1;
+    private static int getPrecision(String value) { // to obtain number of digits after dot
+        int decimalIndex = value.indexOf(".");
+        return value.length() - decimalIndex - 1;
     }
     
     private static String getResult(String expression, DecimalFormat df) {

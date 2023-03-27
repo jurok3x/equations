@@ -9,7 +9,7 @@ public interface IEquationRepository {
 
     Equation save(Equation equation);
     Optional<Equation> findById(Integer id);
-    List<Equation> findByRootValues(List<Double> values);
+    List<Equation> findByRootValues(List<String> values);
     List<Equation> findByRootsCount(Integer count);
 
 }

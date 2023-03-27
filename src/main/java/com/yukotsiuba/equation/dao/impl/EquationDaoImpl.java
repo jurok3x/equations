@@ -81,7 +81,7 @@ public class EquationDaoImpl implements IEquationDao {
     }
 
     @Override
-    public List<Equation> findByRootValues(List<Double> roots) {
+    public List<Equation> findByRootValues(List<String> roots) {
         SqlParameterSource param = new MapSqlParameterSource("roots", roots);
         return template.query(findByRootsQuery, param, rowMapper);
     }
