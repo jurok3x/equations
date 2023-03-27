@@ -36,7 +36,9 @@ public class EquationRepositoryImpl implements IEquationRepository {
             if(!rootExists(root)) {
                 rootDao.save(root); 
             }
-            equationRootDao.save(equation, root);
+            if(!equation.getRoots().contains(root)) {
+                equationRootDao.save(equation, root);
+            }  
         }
     }
     
