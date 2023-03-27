@@ -8,12 +8,13 @@ class EquationUtilsTest {
 
     @Test
     void testRootValidation() {
-        assertTrue(EquationUtils.validateRoot("x-2=2", 4.0));
-        assertTrue(EquationUtils.validateRoot("x-2/4=2", 2.5));
-        assertTrue(EquationUtils.validateRoot("x*x=4", -2.0));
-        assertTrue(EquationUtils.validateRoot("2*x+6=174", 84.0));
-        assertTrue(EquationUtils.validateRoot("2*x+(6+2)=174", 83.0));
-        assertTrue(EquationUtils.validateRoot("x-1=1/3", 1.33));
+        assertTrue(EquationUtils.validateRoot("x-2=2", "4.0"));
+        assertTrue(EquationUtils.validateRoot("x-2/4=2", "2.5"));
+        assertTrue(EquationUtils.validateRoot("x*x=4", "-2.0"));
+        assertTrue(EquationUtils.validateRoot("2*x+6=174", "84.0"));
+        assertTrue(EquationUtils.validateRoot("2*x+(6+2)=174", "83.0"));
+        assertTrue(EquationUtils.validateRoot("x-1=1/3", "1.33"));
+        assertTrue(EquationUtils.validateRoot("x*3=1", "1/3"));
     }
     
     @Test

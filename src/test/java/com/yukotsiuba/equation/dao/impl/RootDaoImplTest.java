@@ -13,6 +13,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest(classes = { TestDBConfig.class, RootDaoImpl.class })
 class RootDaoImplTest {
@@ -22,21 +23,15 @@ class RootDaoImplTest {
     
     @Test
     void whenSave_thenReturnCorrectRoot() {
-        Root root = Root.builder().value(12.0).build();
+        Root root = Root.builder().value("12.0").build();
         root.setId(4);
         assertEquals(root, rootDao.save(root));
-    }
-
-    @Test
-    void whenValueProvided_thenReturnCorrectRoot() {
-        Root root = prepareRoot();
-        assertEquals(root, rootDao.findByValue(root.getValue()).get());
     }
     
     @Test
     void whenIdProvided_thenReturnCorrectRoot() {
         Root root = prepareRoot();
-        assertEquals(root, rootDao.findById(root.getId()).get());
+        assertEquals(Optional.of(root), rootDao.findById(root.getId()));
     }
     
     @Test
@@ -47,14 +42,14 @@ class RootDaoImplTest {
     private Root prepareRoot() {
         return Root.builder()
                 .id(1)
-                .value(84.0)
+                .value("84.0")
                 .build();
     }
     
     private List<Root> prepareRootList() {
         return Arrays.asList(
-                Root.builder().id(2).value(-2.0).build(),
-                Root.builder().id(3).value(2.0).build());
+                Root.builder().id(2).value("-2.0").build(),
+                Root.builder().id(3).value("2.0").build());
     }
     
     private static Equation prepareEquation() {

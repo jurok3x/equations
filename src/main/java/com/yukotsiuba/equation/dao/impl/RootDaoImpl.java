@@ -68,13 +68,13 @@ public class RootDaoImpl implements IRootDao {
     }
     
     @Override
-    public Optional<Root> findByValue(Double value) {
+    public Optional<Root> findByValue(String value) {
         SqlParameterSource param = new MapSqlParameterSource("value", value);
         Root root = null;
         try {
             root = template.queryForObject(findByValueQuery, param, rowMapper);
         } catch (DataAccessException ex) {
-            log.error(String.format("Equation with value - %.2f, not found.", value));
+            log.error(String.format("Equation with value - %s, not found.", value));
         }
         return Optional.ofNullable(root);
     }

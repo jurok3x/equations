@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class Root {
 
     private Integer id;
-    private Double value;
+    private String value;
 }

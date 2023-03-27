@@ -5,6 +5,7 @@ import java.util.regex.Pattern;
 
 public class EquationUtils {
     private static Pattern simpleLang = Pattern.compile("^\\(*-?\\(*(\\d+([.]\\d+)?|x)([-+*/]\\(*-?\\(*(\\d+([.]\\d+)?|x)\\)*)*$");
+    private static Pattern valuePattern = Pattern.compile("^-?\\d+([.]\\d+|/\\d+)?$");
 
 
     public static boolean validateEquation(String equation) {
@@ -58,7 +59,10 @@ public class EquationUtils {
         return count == 1;
     }
 
-    public static boolean validateRoot(String expression, Double value) {
+    public static boolean validateRoot(String expression, String value) {
+        if(!valuePattern.matcher(value).matches()){
+            return false;
+        }
         expression = expression.replaceAll("x", value.toString());
         String[] expressionParts = expression.split("=");
         DecimalFormat df = getResultFormat(getPrecision(value)); 
@@ -75,10 +79,9 @@ public class EquationUtils {
         return new DecimalFormat(format.toString());
     }
     
-    private static int getPrecision(Double value) { // to obtain number of digits after dot
-        String doubleString = value.toString();
-        int decimalIndex = doubleString.indexOf(".");
-        return doubleString.length() - decimalIndex - 1;
+    private static int getPrecision(String value) { // to obtain number of digits after dot
+        int decimalIndex = value.indexOf(".");
+        return value.length() - decimalIndex - 1;
     }
     
     private static String getResult(String expression, DecimalFormat df) {

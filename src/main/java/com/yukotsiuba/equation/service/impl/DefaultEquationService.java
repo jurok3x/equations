@@ -34,7 +34,7 @@ public class DefaultEquationService implements IEquationService {
     }
 
     @Override
-    public List<EquationDto> findByRootValues(List<Double> values) {
+    public List<EquationDto> findByRootValues(List<String> values) {
         if(values == null) {
             throw new NullPointerException("Root list can not be null.");
         }
@@ -57,20 +57,20 @@ public class DefaultEquationService implements IEquationService {
     }
 
     @Override
-    public EquationDto addRoots(Integer equationId, List<Double> values) {
+    public EquationDto addRoots(Integer equationId, List<String> values) {
         List<Root> roots = values.stream().map(value -> mapToRoot(value)).toList();
         Equation equation = equationRepository.findById(equationId)
                 .orElseThrow(() -> new ResourceNotFoundException("Can not find the equation"));
         for(Root root:roots) {
             if(!EquationUtils.validateRoot(equation.getEqString(), root.getValue())) {
-                throw new BadRootException(String.format("Value %.2f is not root of the expression %s.", root.getValue(), equation.getEqString()));
+                throw new BadRootException(String.format("Value %s is not root of the expression %s.", root.getValue(), equation.getEqString()));
             }
         }
         equation.getRoots().addAll(roots);
         return EquationMapper.toDto(equationRepository.save(equation));
     }
     
-    private Root mapToRoot(Double value) {
+    private Root mapToRoot(String value) {
         return Root.builder().value(value).build();
     }
 

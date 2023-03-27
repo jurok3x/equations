@@ -10,6 +10,6 @@ public interface IRootDao {
 
     Root save(Root root);
     Optional<Root> findById(Integer id);
-    Optional<Root> findByValue(Double value);
+    Optional<Root> findByValue(String value);
     List<Root> findByEquation(Equation equation) ;
 }

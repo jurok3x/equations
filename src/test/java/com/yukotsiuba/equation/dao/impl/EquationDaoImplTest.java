@@ -70,8 +70,8 @@ class EquationDaoImplTest {
                 Equation.builder().id(3).eqString("x*x=4").build());
     }
     
-    private static List<Double> prepareRootList() {
-        return Arrays.asList(2.0, 84.0);
+    private static List<String> prepareRootList() {
+        return Arrays.asList("2.0", "84.0");
     }
 
 }
