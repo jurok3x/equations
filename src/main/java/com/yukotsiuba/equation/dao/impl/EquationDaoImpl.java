@@ -26,15 +26,15 @@ public class EquationDaoImpl implements IEquationDao {
 
     private final NamedParameterJdbcTemplate template;
     private final RowMapper<Equation> rowMapper;
-    @Value("${save}")
+    @Value("${save_equation}")
     private String saveQuery;
-    @Value("${find.by_id}")
+    @Value("${find_equation.by_id}")
     private String findByIdQuery;
-    @Value("${find.by_eq_string}")
+    @Value("${find_equation.by_eq_string}")
     private String findByEqStringQuery;
-    @Value("${find.by_roots}")
+    @Value("${find_equation.by_roots}")
     private String findByRootsQuery;
-    @Value("${find.by_roots_count}")
+    @Value("${find_equation.by_roots_count}")
     private String findByRootsCountQuery;
 
     @Override
